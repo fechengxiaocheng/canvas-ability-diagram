@@ -16,13 +16,9 @@ class Libility extends React.Component{
         const { value } = this.props;
         const ability = this.canvasDom.getContext('2d');
         const number = value.length;
-        
-            
-        
-        
 
-        ability.canvas.width = window.innerWidth * 0.8;
-        ability.canvas.height = window.innerWidth * 0.8;
+        ability.canvas.width = window.innerWidth > 414 ? 414 * 0.8 : window.innerWidth * 0.8;
+        ability.canvas.height = window.innerWidth > 414 ? 414 * 0.8 : window.innerWidth * 0.8;
 
         const width = this.canvasDom.width;
         const height = this.canvasDom.height;
@@ -38,8 +34,7 @@ class Libility extends React.Component{
         this.drawPolygon(ability, {number, r, xCenter, yCenter, fillStyle: "rgb(230, 127, 149)"}, [...new Map(value).values()].map(i => ((1-innerSpace)*i + innerSpace)))
         this.drawPolygon(ability, {number, r, xCenter, yCenter, fillStyle: "rgb(242, 180, 193)"}, new Array(number+1).fill(innerSpace))
         this.drawOutLine(ability, {number, r, xCenter, yCenter, strokeStyle: "rgb(242, 180, 193)"})
-        this.drawText(ability, {number, r, xCenter, yCenter, fillStyle: "rgb(0,0,0)"}, [...new Map(value).keys()])
-
+        this.drawText(ability, {number, r, xCenter, yCenter, fillStyle: "rgb(0,0,0)", font: "bold 14px Arial"}, [...new Map(value).keys()])
     }
 
     /**
@@ -104,15 +99,15 @@ class Libility extends React.Component{
      * @param { Array } abilityName 能力属性名
      */
     drawText(ability, config, abilityName) {
-        const { strokeStyle, fillStyle, xCenter, yCenter, number, r } = config;
+        const { strokeStyle, fillStyle, xCenter, yCenter, number, r, font } = config;
         for (let i = 0; i < number; i++) {
             ability.fillStyle = fillStyle;
+            ability.font = font;
             let x = 0;
             let y = 0;
             
-            x = Math.cos(i * Math.PI * 2 / number - Math.PI / 2) * r * 1.3+ xCenter - 10;
+            x = Math.cos(i * Math.PI * 2 / number - Math.PI / 2) * r * 1.3+ xCenter - 14;
             y = Math.sin(i * Math.PI * 2 / number - Math.PI / 2) * r * 1.3  + yCenter;
-           
            
             ability.fillText(abilityName[i], x, y);              
         }
