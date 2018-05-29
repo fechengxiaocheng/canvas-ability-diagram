@@ -8,92 +8,113 @@ import PropTypes from 'prop-types';
 
 class Libility extends React.Component{
     componentDidMount() {
-        const { value, gapNumber } = this.props;
-        
-        console.log(value,this.canvasDom);
-            // var ability_value = new Object;
-            // var ability_name = new Object;
-            // //设置能力值
-            // ability_value[0] = 0.8;
-            // ability_value[1] = 0.1;
-            // ability_value[2] = 0.1;
-            // ability_value[3] = 0.1;
-            // ability_value[4] = 0.1;
-            // ability_value[5] = 0.1;
-            // //设置能力属性名
-            // ability_name[0] = '物理';
-            // ability_name[1] = '魔法';
-            // ability_name[2] = '韧性';
-            // ability_name[3] = '敏捷';
-            // ability_name[4] = '防御';
-            // ability_name[5] = '智力';
-
-        this.polygon(this.canvasDom, gapNumber, value);
+        this.polygon();
     }
 
-    /**
-     * @description
-     * 绘制多边形能力图
-     * @param { Object } canvas-dom
-     * @param { Number }  part 隔断数
-     * @param { Array } value 能力属性名-值
-     */
-    polygon(obj, part, value) {
-        // 边数
-        const side = value.length;
-        // 设置canvas基础属性值
-        const ability = obj.getContext('2d');
-        ability.canvas.width = window.innerWidth * 0.7;
-        ability.canvas.height = window.innerWidth * 0.7;
-        const width = obj.width;
-        const height = obj.height;
+ 
+    polygon() {
+        const { value } = this.props;
+        const ability = this.canvasDom.getContext('2d');
+        const number = value.length;
+        
+            
+        
+        
+
+        ability.canvas.width = window.innerWidth * 0.8;
+        ability.canvas.height = window.innerWidth * 0.8;
+
+        const width = this.canvasDom.width;
+        const height = this.canvasDom.height;
 
         const xCenter = width * 0.5;
         const yCenter = height * 0.5;
-        const radius = width * 0.3;
-        const space = radius/part;
 
-        const theta = Math.PI * 2 / side;
-        //绘制渐变多边形底层
-        for (let j = part; j >= 1; j--) {
-            ability.beginPath();
-            for (let i = 0; i <= side; i++) {
-                ability.lineTo( Math.cos(i * theta) * space * j + xCenter, -Math.sin(i * theta) * space * j + yCenter );
-            }
-            const [r, g, b] = [73, 101, 115];
-            ability.fillStyle = "rgba(" + r + "," + g + "," + b + "," + 0.4 + ")";
-            ability.fill();
-            ability.closePath();
-        }
+        const r = width * 0.3;
+       
+        const innerSpace = 0.3; // 最内部多边形占据的空间
 
-        const v = new Map(value);
-        const ability_value = [...v.values()];
-        const ability_name = [...v.keys()];
+        this.drawPolygon(ability, {number, r, xCenter, yCenter, strokeStyle: "rgb(266, 2, 47)"}, new Array(number+1).fill(1))
+        this.drawPolygon(ability, {number, r, xCenter, yCenter, fillStyle: "rgb(230, 127, 149)"}, [...new Map(value).values()].map(i => ((1-innerSpace)*i + innerSpace)))
+        this.drawPolygon(ability, {number, r, xCenter, yCenter, fillStyle: "rgb(242, 180, 193)"}, new Array(number+1).fill(innerSpace))
+        this.drawOutLine(ability, {number, r, xCenter, yCenter, strokeStyle: "rgb(242, 180, 193)"})
+        this.drawText(ability, {number, r, xCenter, yCenter, fillStyle: "rgb(0,0,0)"}, [...new Map(value).keys()])
 
-        //绘制能力多边形
+    }
+
+    /**
+     * @description 绘制多边形
+     * @param { Object } ability 
+     * @param { Object } config 
+     * @param { String } config.strokeStyle 线样式
+     * @param { String } config.fillStyle 填充样式
+     * @param { Number } config.xCenter 中心坐标x
+     * @param { Number } config.yCenter 中心坐标y
+     * @param { Number } config.number 多边形个数
+     * @param { Number } config.r 多边形半径
+     */
+    drawPolygon(ability, config, abilityValue) {
+       
+        const { strokeStyle, fillStyle, xCenter, yCenter, number, r } = config;
         ability.beginPath();
-        for (let i = 0; i <= side; i++) {
-            var x = Math.cos(i * theta) * radius * ability_value[ i % side] + xCenter;
-            var y = -Math.sin(i * theta) * radius * ability_value[ i % side] + yCenter;
-            ability.lineTo(x,y);
+        for (let i = 0; i <= number; i++) {
+            const newX = Math.cos(i * Math.PI * 2 / number - Math.PI / 2) * r * abilityValue[i] + xCenter;
+            const newY = Math.sin(i * Math.PI * 2 / number - Math.PI / 2) * r * abilityValue[i] + yCenter;
+            console.log(i, newX, newY);
+            ability.lineTo( newX, newY );
         }
-        ability.strokeStyle="rgba(255,255,96,1)";
-        ability.lineWidth = 4;
-        ability.stroke();
+        if (strokeStyle) {
+            ability.strokeStyle = strokeStyle;
+            ability.lineWidth = 2;
+            ability.stroke();
+        }
+        if (fillStyle) {
+            ability.fillStyle = fillStyle;
+            ability.fill();
+        }
+        
         ability.closePath();
 
-        //绘制字体
-        for (var i=0; i<side; i++) {
-            ability.fillStyle="rgba(0,0,0,1)";
-            ability.font = "normal 15px Microsoft Yahei";
-            if (Math.cos(i*theta)*radius>0) {
-                var x = Math.cos(i * theta) * radius + 3 + xCenter;
-                var y = -Math.sin(i * theta) * radius * 1.3 + yCenter;
-            } else {
-                var x = Math.cos(i * theta) * radius * 1.5 + xCenter;
-                var y = -Math.sin(i * theta) * radius * 1.3 + yCenter;
-            }
-            ability.fillText(ability_name[i],x,y);              
+    }
+    /**
+     * @description 绘制由中心向两边扩散的line
+     * @param { Object } ability 
+     * @param { Object } config 
+     */
+    drawOutLine(ability, config) {
+        const { strokeStyle, xCenter, yCenter, number, r } = config;
+        ability.beginPath();
+        for (let i = 0; i < number; i++) {
+            const newX = Math.cos(i * Math.PI * 2 / number - Math.PI / 2) * r + xCenter;
+            const newY = Math.sin(i * Math.PI * 2 / number - Math.PI / 2) * r  + yCenter;
+        
+            ability.moveTo(xCenter, yCenter);
+            ability.lineTo( newX, newY );
+        }
+        
+        ability.strokeStyle = strokeStyle;
+        ability.lineWidth = 2;
+        ability.stroke();
+        ability.closePath();
+    }
+    /**
+     * @description 绘制属性名
+     * @param { Object } ability 
+     * @param { Object } config 
+     * @param { Array } abilityName 能力属性名
+     */
+    drawText(ability, config, abilityName) {
+        const { strokeStyle, fillStyle, xCenter, yCenter, number, r } = config;
+        for (let i = 0; i < number; i++) {
+            ability.fillStyle = fillStyle;
+            let x = 0;
+            let y = 0;
+            
+            x = Math.cos(i * Math.PI * 2 / number - Math.PI / 2) * r * 1.3+ xCenter - 10;
+            y = Math.sin(i * Math.PI * 2 / number - Math.PI / 2) * r * 1.3  + yCenter;
+           
+           
+            ability.fillText(abilityName[i], x, y);              
         }
     }
      render() {
@@ -103,10 +124,6 @@ class Libility extends React.Component{
 
 Libility.protoTypes = {
      value: PropTypes.array.required,
-     gapNumber: PropTypes.Number
-}
-Libility.defaultTypes = {
-    gapNumber: 10
 }
 
  export default Libility;

@@ -5,11 +5,9 @@ import Libility from './components/Libility';
 
 class App extends Component {
   render() {
-
-   
     return (
       <div className="App">
-        <Libility value={[['颜值', 0.7], ['身材', 0.7], ['才华', 1], ['性格', 0.8]]} gapNumber={10}/>
+        <Libility value={[['颜值', 0.9], ['身材', 0.2], ['才华', 0.5], ['性格', 0.5], ['品行', 0.5], ['才艺', 0.5]]}/>
       </div> 
     );
   }
