@@ -53,8 +53,8 @@ class Libility extends React.Component{
         const { strokeStyle, fillStyle, xCenter, yCenter, number, r } = config;
         ability.beginPath();
         for (let i = 0; i <= number; i++) {
-            const newX = Math.cos(i * Math.PI * 2 / number - Math.PI / 2) * r * abilityValue[i] + xCenter;
-            const newY = Math.sin(i * Math.PI * 2 / number - Math.PI / 2) * r * abilityValue[i] + yCenter;
+            const newX = Math.cos(i * Math.PI * 2 / number ) * r * abilityValue[i] + xCenter;
+            const newY = Math.sin(i * Math.PI * 2 / number ) * r * abilityValue[i] + yCenter;
             console.log(i, newX, newY);
             ability.lineTo( newX, newY );
         }
@@ -80,8 +80,8 @@ class Libility extends React.Component{
         const { strokeStyle, xCenter, yCenter, number, r } = config;
         ability.beginPath();
         for (let i = 0; i < number; i++) {
-            const newX = Math.cos(i * Math.PI * 2 / number - Math.PI / 2) * r + xCenter;
-            const newY = Math.sin(i * Math.PI * 2 / number - Math.PI / 2) * r  + yCenter;
+            const newX = Math.cos(i * Math.PI * 2 / number) * r + xCenter;
+            const newY = Math.sin(i * Math.PI * 2 / number) * r  + yCenter;
         
             ability.moveTo(xCenter, yCenter);
             ability.lineTo( newX, newY );
@@ -106,8 +106,8 @@ class Libility extends React.Component{
             let x = 0;
             let y = 0;
             
-            x = Math.cos(i * Math.PI * 2 / number - Math.PI / 2) * r * 1.3+ xCenter - 14;
-            y = Math.sin(i * Math.PI * 2 / number - Math.PI / 2) * r * 1.3  + yCenter;
+            x = Math.cos(i * Math.PI * 2 / number ) * r * 1.3+ xCenter - 14;
+            y = Math.sin(i * Math.PI * 2 / number ) * r * 1.3  + yCenter;
            
             ability.fillText(abilityName[i], x, y);              
         }
