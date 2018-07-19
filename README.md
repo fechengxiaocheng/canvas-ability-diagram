@@ -17,7 +17,7 @@
 
 ## 效果图
 
-![效果图](./src/libility.png)
+![效果图](./src/ability.png)
 
 ## 主要功能点
 
