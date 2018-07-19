@@ -36,7 +36,7 @@
 
   1、要实现如上图所谓的能力图，从外到内看无非就是以下5个部分组成。
 
-   <img src="./src/p5.png" style="width: 200px; height: 200px"/>
+   <img src="./src/p5.png" style="width: 120px; height: 120px"/>
 
     a.最外层的text能力属性
 
